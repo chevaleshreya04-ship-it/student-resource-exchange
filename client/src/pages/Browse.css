@@ -1,0 +1,12 @@
+.browse-sub-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 0.5rem;
+
+    max-width: 900px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+}

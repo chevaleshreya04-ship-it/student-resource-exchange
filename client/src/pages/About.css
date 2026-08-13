@@ -1,0 +1,42 @@
+.about-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 700px;
+    margin-inline: auto;
+    padding: 2rem 1rem 3rem;
+}
+
+.about-container h1{
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.about-section{
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.about-section h2{
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+
+.about-section p{
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.about-steps{
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    padding-left: 1.25rem;
+}
+
+.about-steps li{
+    margin-bottom: 0.5rem;
+}
+
+.about-steps strong{
+    color: var(--color-text);
+}

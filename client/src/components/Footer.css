@@ -1,0 +1,17 @@
+.footer-container{
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.footer-container a{
+    text-decoration: none;
+    color: var(--color-primary);
+    transition: transform 0.5s, color 1s;
+}
+
+.footer-container a:hover{
+    transform: scale(1.05);
+    color: var(--color-hover);
+}

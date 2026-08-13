@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+*{
+    margin: 0; 
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+  --color-bg: #FAFAF7;
+  --color-surface: #CFE5D5;
+  --color-border: #B8D6B2;
+  --color-hover: #A6D2C8;
+  --color-primary: #6EA89E;
+  --color-text: #2A2E2C;
+  --color-text-muted: #5C6560;
+}
+
+body{
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'IBM Plex Serif', sans-serif;
+}
+
+h1, h2, h3 { font-family: 'IBM Plex Serif', serif; }
