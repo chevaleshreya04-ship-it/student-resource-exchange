@@ -1,9 +1,16 @@
 import React from "react";
 import "./Sorting.css";
 
-const Sorting = ({ sortBy, sortOrder, onSortByChange, onSortOrderChange }) => {
-  const handleSortByChange = (e) => onSortByChange(e.target.value);
-  const handleSortOrderChange = (e) => onSortOrderChange(e.target.value);
+interface SortingProps {
+  sortBy: string,
+  sortOrder: string, 
+  onSortByChange: (str: string) => void
+  onSortOrderChange: (str: string) => void
+}
+
+const Sorting = ({ sortBy, sortOrder, onSortByChange, onSortOrderChange }: SortingProps) => {
+  const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => onSortByChange(e.target.value);
+  const handleSortOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => onSortOrderChange(e.target.value);
 
   return (
     <div className="sort-container">
