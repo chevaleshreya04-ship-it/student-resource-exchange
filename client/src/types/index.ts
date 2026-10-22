@@ -1,4 +1,5 @@
-export type ResourceType = "question paper" | "textbook" | "research paper" | "notes";
+export const TYPE_OPTIONS = ["question paper", "textbook", "research paper", "notes"];
+export type ResourceType = (typeof TYPE_OPTIONS)[number]
 
 export interface Resource {
   _id: string;
@@ -14,4 +15,13 @@ export interface Resource {
   createdAt: string;
 }
 
-export interface User { id: string; username: string }
+export type ResourceField = "subject" | "university" | "branch" | "semester";
+
+export type FilterKey = ResourceField | "type"
+
+export type Filters = Partial<Record<FilterKey, string>>
+
+export interface User {
+  id: string;
+  username: string;
+}
