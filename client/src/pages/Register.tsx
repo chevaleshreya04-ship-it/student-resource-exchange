@@ -1,39 +1,39 @@
-import React, { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import "./Register.css";
 import { useAuth } from "../context/AuthContext";
-import toast from "react-hot-toast";
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
   });
-
-  const { login } = useAuth();
-
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const {login} = useAuth()
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    if (!formData.username) {
-      setError("Please enter your username.");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
-    if (!formData.password) {
-      setError("Please enter password.");
+    if (formData.username.length < 3) {
+      setError("Username must be at least 3 characters.");
       return;
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,12 +45,12 @@ const Login = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Login failed.");
+        setError(data.message || "Registration failed.");
         return;
       }
 
       login(data.user, data.token);
-      toast.success("Logged in successfully!");
+      toast.success("Registered successfully!");
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -59,7 +59,7 @@ const Login = () => {
 
   return (
     <div className="container">
-      <h1 className="form-heading">Log In</h1>
+      <h1 className="form-heading">Registration</h1>
       <form onSubmit={handleSubmit} className="register-form">
         <div className="input">
           <label htmlFor="username">Username:</label>
@@ -83,15 +83,26 @@ const Login = () => {
           />
         </div>
 
+        <div className="input">
+          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+        </div>
+
         {error && <p className="form-error">{error}</p>}
 
         <button type="submit" className="submit-btn">
           Submit
         </button>
         <p className="login-link">
-          Don't have an account?{" "}
-          <Link className="nav-link" to="/register">
-            Sign up
+          Already have an account?{" "}
+          <Link className="nav-link" to="/login">
+            Log in
           </Link>
         </p>
       </form>
@@ -102,4 +113,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

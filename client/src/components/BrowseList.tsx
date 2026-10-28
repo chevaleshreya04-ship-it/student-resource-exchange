@@ -20,5 +20,5 @@ const BrowseList = ({resources, onDelete}: BrowseListProps) => {
     </div>
   )
 }
-
+ 
 export default BrowseList 
