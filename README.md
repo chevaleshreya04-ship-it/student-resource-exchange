@@ -24,9 +24,9 @@ SRE fixes this by giving resources a permanent, searchable home, with download c
 
 ## Tech stack
 
-**Frontend:** React (Vite), React Router, Context API for auth state, `react-hot-toast` for notifications, plain CSS with design tokens
+**Frontend:** React + TypeScript (Vite), React Router, Context API for auth state, `react-hot-toast` for notifications, plain CSS with design tokens
 
-**Backend:** Node.js, Express, MongoDB Atlas with Mongoose, JWT (`jsonwebtoken`) + `bcryptjs` for auth, Cloudinary + `multer` / `multer-storage-cloudinary` for file storage
+**Backend:** Node.js, Express, TypeScript, MongoDB Atlas with Mongoose, JWT (`jsonwebtoken`) + `bcryptjs` for auth, Cloudinary + `multer` / `multer-storage-cloudinary` for file storage
 
 ## Project structure
 
@@ -37,13 +37,16 @@ student-resource-exchange/
 │       ├── components/     # NavBar, Footer, BrowseList, BrowseItem, FilterBar, FilterChips, Sorting, SearchBar, Hero, ProtectedRoute
 │       ├── context/         # AuthContext
 │       ├── pages/           # Home, Browse, Upload, Dashboard, Login, Register, About, NotFound
-│       └── data/            # dummyResources.js (seed data only)
+│       └── types/           # index.ts
 └── server/                  # Express backend
-    ├── config/               # db.js, cloudinary.js, multer.js
-    ├── models/                # User.js, Resource.js
-    ├── routes/                # authRoutes.js, resourceRoutes.js
-    ├── middleware/            # auth.js (JWT protect middleware)
-    └── seed.js                # seeds sample users + resources
+    ├── config/               # db.ts, cloudinary.ts, multer.ts
+    ├── models/                # User.ts, Resource.ts
+    ├── routes/                # authRoutes.ts, resourceRoutes.ts
+    ├── middleware/            # auth.ts (JWT protect middleware)
+    ├── types/                 # express.d.ts, multer-storage-cloudinary.d.ts
+    ├── utils/                 # getErrorMessage.ts
+    ├── dummyResources.ts      # sample resources
+    └── seed.ts                # seeds sample users + resources
 ```
 
 ## API endpoints
@@ -89,12 +92,13 @@ PORT=5000
 
 Run the server:
 ```bash
-node server.js
+npm run dev          # development (auto-restart)
+# or: npm run build && npm start   # production-style
 ```
 
-Optionally seed sample data:
+Optionally seed sample data: (⚠️ This deletes all existing users and resources first, so only run it against a dev database)
 ```bash
-node seed.js
+npm run seed
 ```
 This creates a few sample users (all with password `password123`) and resources.
 
