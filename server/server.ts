@@ -6,7 +6,19 @@ import resourceRoutes from "./routes/resourceRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
-connectDB()
+
+const requiredEnv = [
+  "MONGO_URI",
+  "JWT_SECRET",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
+];
+for (const key of requiredEnv) {
+  if (!process.env[key]) throw new Error(`${key} is not set`);
+}
+
+connectDB();
 
 const app = express();
 

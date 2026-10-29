@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import Resource from "./models/Resource.js";
 import User from "./models/User.js";
 import { dummyResources } from "./dummyResources.js"; // adjust path as needed
+import { getErrorMessage } from "./utils/getErrorMessage.js";
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ const seed = async () => {
     );
 
     // map username -> real Mongo _id
-    const userMap = {};
+    const userMap: Record<string, mongoose.Types.ObjectId> = {};
     userDocs.forEach((u) => {
       userMap[u.username] = u._id;
     });
@@ -44,7 +45,7 @@ const seed = async () => {
     console.log(`Seeded ${userDocs.length} users and ${resourcesWithRealIds.length} resources`);
     console.log("All seeded users share the password: password123");
   } catch (err) {
-    console.error("Seed error:", err.message);
+    console.error("Seed error:", getErrorMessage(err));
   } finally {
     mongoose.connection.close();
   }

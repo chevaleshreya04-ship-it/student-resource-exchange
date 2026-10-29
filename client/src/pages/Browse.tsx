@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import BrowseList from "../components/BrowseList";
 import SearchBar from "../components/SearchBar";
@@ -8,10 +8,11 @@ import Sorting from "../components/Sorting";
 import "./Browse.css";
 import Footer from "../components/Footer";
 import toast from 'react-hot-toast'
+import type { FilterKey, Filters, Resource } from "../types";
 
 const Browse = () => {
   // functions
-  const removeExtraSpaces = (str) => {
+  const removeExtraSpaces = (str: string): string => {
     let i = 0;
     const n = str.length;
     let res = "";
@@ -29,8 +30,8 @@ const Browse = () => {
   };
 
   // states
-  const [resources, setResources] = useState([]);
-  const [filters, setFilters] = useState({});
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [filters, setFilters] = useState<Filters>({});
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("downloads");
@@ -38,7 +39,7 @@ const Browse = () => {
 
   // functions
   // access the previous state, then add the new key-value pair
-  const setFilter = (key, value) => {
+  const setFilter = (key: FilterKey, value: string) => {
     if (value === "") {
       removeFilter(key);
       return;
@@ -47,7 +48,7 @@ const Browse = () => {
   };
 
   // access previous state using callback fn in state updater fn, create a deep copy of prev state so as to maintain immutability, use the delete keyword to delete the specific attribute you wanna delete i.e. filter you wanna remove. then return the updated object in the callback fn of state updater
-  const removeFilter = (key) => {
+  const removeFilter = (key: FilterKey) => {
     setFilters((prev) => {
       const updated = { ...prev };
       delete updated[key];
@@ -55,11 +56,11 @@ const Browse = () => {
     });
   };
 
-  const onSortByChange = (data) => {
+  const onSortByChange = (data: string) => {
     setSortBy(data);
   };
 
-  const onSortOrderChange = (data) => {
+  const onSortOrderChange = (data: string) => {
     setSortOrder(data);
   };
 
@@ -71,7 +72,7 @@ const Browse = () => {
       return item.title.toLowerCase().includes(str);
     })
     .filter((item) => {
-      return Object.entries(filters).every(([key, value]) => {
+      return (Object.entries(filters) as [FilterKey, string][]).every(([key, value]) => {
         // semester comes from dummy data as a number, but <select> values are always strings
         return String(item[key]) === String(value);
       });
@@ -81,7 +82,7 @@ const Browse = () => {
     const dir = sortOrder === "asc" ? 1 : -1;
     if (sortBy === "downloads") return (a.downloads - b.downloads) * dir;
     if (sortBy === "dateUploaded")
-      return (new Date(a.createdAt) - new Date(b.createdAt)) * dir;
+      return (+new Date(a.createdAt) - +new Date(b.createdAt)) * dir;
     return 0;
   });
 

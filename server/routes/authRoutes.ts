@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { getErrorMessage } from "../utils/getErrorMessage.js";
 
 const router = express.Router();
 
@@ -23,11 +24,11 @@ router.post("/register", async (req, res) => {
 
     const user = await User.create({ username, password: hashedPassword });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id.toString() }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
 
     res.status(201).json({ token, user: { id: user._id, username: user.username } });
   } catch (err) {
-    res.status(500).json({ message: "Registration failed", error: err.message });
+    res.status(500).json({ message: "Registration failed", error: getErrorMessage(err) });
   }
 });
 
@@ -50,11 +51,11 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id.toString() }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
 
     res.json({ token, user: { id: user._id, username: user.username } });
   } catch (err) {
-    res.status(500).json({ message: "Login failed", error: err.message });
+    res.status(500).json({ message: "Login failed", error: getErrorMessage(err) });
   }
 });
 

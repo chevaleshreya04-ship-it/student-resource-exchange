@@ -1,10 +1,15 @@
-import React from 'react'
+import type { FilterKey } from '../types'
 import './FilterChips.css'
 
-const FilterChips = ({ filters, removeFilter }) => {
-  // collect a multidimensional array containing arrays of key-value pairs from filters object. ex: [['abc': 123], ...]
-  const activeFilters = Object.entries(filters)
+interface FilterChipsProps {
+  filters: Record<string, string>
+  removeFilter: (key: FilterKey) => void
+}
 
+const FilterChips = ({ filters, removeFilter }: FilterChipsProps) => {
+  // collect a multidimensional array containing arrays of key-value pairs from filters object. ex: [['abc': 123], ...]
+  const activeFilters = Object.entries(filters) as [FilterKey, string][]
+ 
   // if no filters are applied, then nothing should appear on the screen, so return early
   if (activeFilters.length === 0) return null
 

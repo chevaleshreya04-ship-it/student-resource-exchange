@@ -1,7 +1,12 @@
-import React from "react";
+import type { Resource } from "../types";
 import "./BrowseItem.css";
 
-const BrowseItem = ({ item, onDelete }) => {
+interface BrowseItemProps {
+  item: Resource,
+  onDelete?: (id: string) => void;
+}
+
+const BrowseItem = ({ item, onDelete }: BrowseItemProps) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(item.fileURL);

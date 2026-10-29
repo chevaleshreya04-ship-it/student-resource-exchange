@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import BrowseList from "../components/BrowseList";
 import toast from "react-hot-toast";
 import "./Dashboard.css";
+import type { Resource } from "../types";
 
 const Dashboard = () => {
-  //TODO: add a delete functionality
   const { user, token } = useAuth();
 
   const displayName = user ? user.username : "Guest";
 
-  const [filteredResources, setFilteredResources] = useState([]);
+  const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     const confirmed = window.confirm(
       "Delete this resource? This can't be undone.",
     );
@@ -39,9 +39,9 @@ const Dashboard = () => {
         return;
       }
 
-      setFilteredResources((prev) => prev.filter((item) => item._id !== id));
+      setFilteredResources((prev) => prev.filter((item: Resource) => item._id !== id));
       toast.success("Resource deleted.");
-    } catch (err) {
+    } catch {
       toast.error("Something went wrong. Please try again.");
     }
   };
@@ -54,7 +54,7 @@ const Dashboard = () => {
         if (!res.ok) throw new Error("Failed to fetch resources");
         const data = await res.json();
 
-        const mine = data.filter((item) => item.uploadedBy?._id === user?.id);
+        const mine = data.filter((item:Resource) => item.uploadedBy?._id === user?.id);
         setFilteredResources(mine);
       } catch (err) {
         console.error(err);
@@ -69,7 +69,7 @@ const Dashboard = () => {
 
   const uploadCount = filteredResources.length;
   const totalDownloads = filteredResources.reduce(
-    (sum, item) => sum + item.downloads,
+    (sum: number, item) => sum + item.downloads,
     0,
   );
 

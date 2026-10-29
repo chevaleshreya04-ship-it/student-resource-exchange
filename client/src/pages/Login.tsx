@@ -1,39 +1,39 @@
-import React, { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import "./Register.css";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
-const Register = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    confirmPassword: "",
   });
+
+  const { login } = useAuth();
+
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const {login} = useAuth()
-
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+    if (!formData.username) {
+      setError("Please enter your username.");
       return;
     }
-    if (formData.username.length < 3) {
-      setError("Username must be at least 3 characters.");
+    if (!formData.password) {
+      setError("Please enter password.");
       return;
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,12 +45,12 @@ const Register = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Registration failed.");
+        setError(data.message || "Login failed.");
         return;
       }
 
       login(data.user, data.token);
-      toast.success("Registered successfully!");
+      toast.success("Logged in successfully!");
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -59,7 +59,7 @@ const Register = () => {
 
   return (
     <div className="container">
-      <h1 className="form-heading">Registration</h1>
+      <h1 className="form-heading">Log In</h1>
       <form onSubmit={handleSubmit} className="register-form">
         <div className="input">
           <label htmlFor="username">Username:</label>
@@ -83,26 +83,15 @@ const Register = () => {
           />
         </div>
 
-        <div className="input">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            id="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-        </div>
-
         {error && <p className="form-error">{error}</p>}
 
         <button type="submit" className="submit-btn">
           Submit
         </button>
         <p className="login-link">
-          Already have an account?{" "}
-          <Link className="nav-link" to="/login">
-            Log in
+          Don't have an account?{" "}
+          <Link className="nav-link" to="/register">
+            Sign up
           </Link>
         </p>
       </form>
@@ -113,4 +102,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

@@ -1,8 +1,13 @@
-import React from 'react'
+import type { Resource } from '../types';
 import BrowseItem from './BrowseItem'
 import './BrowseList.css'
 
-const BrowseList = ({resources, onDelete}) => {
+interface BrowseListProps {
+  resources: Resource[],
+  onDelete?: (id: string) => void;
+}
+
+const BrowseList = ({resources, onDelete}: BrowseListProps) => {
   return (
     <div>
         <ul>
@@ -15,5 +20,5 @@ const BrowseList = ({resources, onDelete}) => {
     </div>
   )
 }
-
-export default BrowseList
+ 
+export default BrowseList 
