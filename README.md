@@ -2,9 +2,9 @@
 
 A full-stack MERN application where students can upload, browse, search, and download academic materials — question papers, textbooks, research papers, and notes — all in one searchable, organized place.
 
-**Live demo:** _add your deployed frontend URL here_
-**Backend API:** _add your deployed backend URL here_
-
+**Live demo:** _https://student-resource-exchange.vercel.app/_
+**Backend API:** _https://student-resource-exchange-33kp.onrender.com_
+ 
 ---
 
 ## The problem
