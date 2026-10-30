@@ -9,25 +9,9 @@ import "./Browse.css";
 import Footer from "../components/Footer";
 import toast from 'react-hot-toast'
 import type { FilterKey, Filters, Resource } from "../types";
+import { removeExtraSpaces } from "../utils/helpers";
 
 const Browse = () => {
-  // functions
-  const removeExtraSpaces = (str: string): string => {
-    let i = 0;
-    const n = str.length;
-    let res = "";
-
-    while (i < n) {
-      while (i < n && str.charAt(i) === " ") i++;
-      while (i < n && str.charAt(i) !== " ") {
-        res += str.charAt(i);
-        i++;
-      }
-      if (i < n) res += " ";
-    }
-
-    return res;
-  };
 
   // states
   const [resources, setResources] = useState<Resource[]>([]);
@@ -130,7 +114,7 @@ const Browse = () => {
         ) : sortedResources.length === 0 ? (
           <div>
             <p>No resources match your search or filters.</p>
-            <button onClick={() => setFilters({})}>Clear All Filters</button>
+            {Object.keys(filters).length > 0 && <button onClick={() => setFilters({})}>Clear All Filters</button>}
           </div>
         ) : (
           <BrowseList resources={sortedResources} />
