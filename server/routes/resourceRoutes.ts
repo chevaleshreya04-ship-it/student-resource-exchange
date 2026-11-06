@@ -4,8 +4,16 @@ import protect from "../middleware/auth.js";
 import upload from "../config/multer.js";
 import cloudinary from "../config/cloudinary.js";
 import { getErrorMessage } from "../utils/getErrorMessage.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
+
+router.param("id", (req, res, next, id) => {
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).json({ message: "Resource not found" });
+  }
+  next();
+});
 
 // GET /api/resources - all resources
 router.get("/", async (req, res) => {
