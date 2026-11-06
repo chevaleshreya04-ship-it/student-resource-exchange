@@ -1,9 +1,13 @@
 # Student Resource Exchange (SRE)
 
+![CI](https://github.com/chevaleshreya04-ship-it/student-resource-exchange/actions/workflows/ci.yml/badge.svg)
+
 A full-stack MERN application where students can upload, browse, search, and download academic materials — question papers, textbooks, research papers, and notes — all in one searchable, organized place.
 
 **Live demo:** _https://student-resource-exchange.vercel.app/_
 **Backend API:** _https://student-resource-exchange-33kp.onrender.com_
+
+> ⏳ The backend runs on a free tier, so the first request after inactivity can take up to a minute to wake up.
  
 ---
 
@@ -21,6 +25,7 @@ SRE fixes this by giving resources a permanent, searchable home, with download c
 - 🔐 **Authentication** — JWT-based register/login, with protected routes for uploading and managing resources
 - 🗂️ **Personal dashboard** — logged-in users can view everything they've uploaded, see total downloads across their resources, and delete their own uploads
 - 🌐 **Public browsing** — anyone can browse and search resources without an account; login is only required to upload
+- ✅ **Tested** — Vitest suites on both client and server (API routes, auth middleware, ownership checks), run automatically on every push via GitHub Actions
 
 ## Tech stack
 
@@ -28,25 +33,31 @@ SRE fixes this by giving resources a permanent, searchable home, with download c
 
 **Backend:** Node.js, Express, TypeScript, MongoDB Atlas with Mongoose, JWT (`jsonwebtoken`) + `bcryptjs` for auth, Cloudinary + `multer` / `multer-storage-cloudinary` for file storage
 
+**Testing & CI:** Vitest, React Testing Library, Supertest, `mongodb-memory-server`, GitHub Actions
+
 ## Project structure
 
 ```
 student-resource-exchange/
-├── client/                 # React frontend (Vite)
+├── .github/workflows/ci.yml
+├── client/                   # React frontend (Vite). Tests sit next to their components as *.test.tsx
 │   └── src/
-│       ├── components/     # NavBar, Footer, BrowseList, BrowseItem, FilterBar, FilterChips, Sorting, SearchBar, Hero, ProtectedRoute
-│       ├── context/         # AuthContext
-│       ├── pages/           # Home, Browse, Upload, Dashboard, Login, Register, About, NotFound
-│       └── types/           # index.ts
-└── server/                  # Express backend
+│       ├── components/       # NavBar, Footer, BrowseList, BrowseItem, FilterBar, FilterChips, Sorting, SearchBar, Hero, ProtectedRoute
+│       ├── context/          # AuthContext
+│       ├── pages/            # Home, Browse, Upload, Dashboard, Login, Register, About, NotFound
+│       └── types/            # index.ts
+└── server/                   # Express backend
+    ├── app.ts                # Express app (no listen), imported by server.ts and tests
+    ├── server.ts             # DB connection + app.listen
     ├── config/               # db.ts, cloudinary.ts, multer.ts
-    ├── models/                # User.ts, Resource.ts
-    ├── routes/                # authRoutes.ts, resourceRoutes.ts
-    ├── middleware/            # auth.ts (JWT protect middleware)
-    ├── types/                 # express.d.ts, multer-storage-cloudinary.d.ts
-    ├── utils/                 # getErrorMessage.ts
-    ├── dummyResources.ts      # sample resources
-    └── seed.ts                # seeds sample users + resources
+    ├── models/               # User.ts, Resource.ts
+    ├── routes/               # authRoutes.ts, resourceRoutes.ts
+    ├── middleware/           # auth.ts (JWT protect middleware)
+    ├── types/                # express.d.ts, multer-storage-cloudinary.d.ts
+    ├── utils/                # getErrorMessage.ts
+    ├── tests/                # setup.ts, helpers.ts, auth/resources/middleware tests
+    ├── dummyResources.ts     # sample resources
+    └── seed.ts               # seeds sample users + resources
 ```
 
 ## API endpoints
@@ -64,7 +75,7 @@ student-resource-exchange/
 ## Getting started locally
 
 ### Prerequisites
-- Node.js (v18+)
+- Node.js (v20+; CI runs on v22)
 - A MongoDB Atlas cluster
 - A Cloudinary account (free tier is fine)
 
@@ -119,6 +130,27 @@ npm run dev
 ```
 
 The app should now be running at `http://localhost:5173` (or whatever port Vite assigns), talking to the backend at `http://localhost:5000`.
+
+## Testing
+
+Both halves of the app have automated tests, and CI runs them on every push and pull request.
+
+```bash
+# backend
+cd server
+npm test                      # watch mode
+npx vitest run --coverage     # single run + coverage report
+
+# frontend
+cd client
+npm test
+```
+
+**Backend:** integration tests use Supertest against the Express app, with an in-memory MongoDB (`mongodb-memory-server`), so no real database is needed. Cloudinary and multer are mocked, so tests never touch external services. Covered: register/login, the JWT middleware (invalid, expired, and malformed tokens), owner-only delete, download counting, malformed IDs, and 500 error paths. Server coverage is around 90%+ lines.
+
+**Frontend:** component and page tests with React Testing Library covering search, filtering, sorting, protected routes, and helper utilities.
+
+The first backend run downloads a MongoDB binary, so it's slow once.
 
 ## Future improvements
 
